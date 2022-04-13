@@ -3,7 +3,6 @@ const validator = require('../middleware/validator')
 const aws = require('../middleware/aws')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const ObjectId = require('mongoose').Types.ObjectId;
 
 
 
@@ -31,7 +30,7 @@ const userCreate = async (req, res) => {
             return res.status(400).send({ status: false, msg: "email is required" })
         }
         if (!validator.isRightFormatemail(email)) {
-            return res.status(404).send({ status: false, msg: "Invalid Email" })
+            return res.status(400).send({ status: false, msg: "Invalid Email" })
 
         }
         let isEmailAlreadyUsed = await userModel.findOne({ email })
@@ -159,6 +158,10 @@ const loginUser = async function (req, res) {
         let body = req.body
         let { email, password } = body
         //--------------------------------validation starts------------------------------
+        if (!validator.isValidRequestBody(email)) {
+            res.status(400).send({ status: false, msg: "plese pass required parameters" })
+            return
+        }
         if (!validator.isValid(email)) {
             res.status(400).send({ status: false, msg: "Email is required" })
             return
@@ -200,7 +203,7 @@ const getUserById = async (req, res) => {
     try {
 
         const userId = req.params.userId
-        if (Object.keys(userId).length == 0) {
+        if (!validator.isValidObjectId) {
             return res.status(400).send({ status: false, msg: "userId is required in params" })
         }
 
@@ -360,7 +363,7 @@ const updateProfile = async (req, res) => {
             }
         }
         let updateProfile = await userModel.findOneAndUpdate({ _id: userId },
-            { fname, lname, email, password, profileImage, address: updateAddress.address }, { new: true })
+            { fname, lname, email,phone, password, profileImage, address: updateAddress.address }, { new: true })
         return res.status(200).send({ status: true, message: "user profile update successfully", data: updateProfile })
     } catch (err) {
         console.log(err)

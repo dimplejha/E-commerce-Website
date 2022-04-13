@@ -66,6 +66,10 @@ const isValidPinCode = function(value){
     return true
 }
 
+const isValidCurrencyFormat = function (currencyFormat) {
+    return ['₹'].indexOf(currencyFormat) !== -1
+}
+
 
 
 
@@ -81,5 +85,6 @@ module.exports = {
     validEnum,
     isValidPrice,
     isValidInstallments,
-    isValidPinCode
+    isValidPinCode,
+    isValidCurrencyFormat
 }

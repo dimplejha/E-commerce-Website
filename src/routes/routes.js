@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController')
 const productController = require('../controllers/productController')
-
 const mv = require('../middleware/auth.js')
 
 
@@ -17,7 +16,7 @@ router.put('/user/:userId/profile',mv.userAuth,userController.updateProfile)
 
 //--------------------------------------------product api--------------------------------
 router.post('/products',productController.createProduct)
-router.get('/products',productController.gettingProduct)
+router.get('/products',productController.getProductsByfilter)
 router.get('/products/:productId',productController.getproductsById)
 router.put('/products/:productId',productController.updatedProductById)
 router.delete('/products/:productId',productController.deleteproductById)
