@@ -60,10 +60,10 @@ const userCreate = async (req, res) => {
             res.status(400).send({ status: false, msg: "password is required" })
             return
         }
-        // let size = Object.keys(password.trim()).length
-        // if (size < 8 || size > 15) {
-        //     return res.status(400).send({ status: false, message: "Please provide password with minimum 8 and maximum 14 characters" });;
-        // }
+        let size = Object.keys(password.trim()).length
+        if (size < 8 || size > 15) {
+            return res.status(400).send({ status: false, message: "Please provide password with minimum 8 and maximum 14 characters" });;
+        }
         if (validator.isRightpassword(password)) {
             res.status(400).send({ status: false, msg: "Please enter Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
             return
@@ -315,7 +315,7 @@ const updateProfile = async (req, res) => {
                 return res.status(400).send({ status: false, message: `Unable to update phone. ${phone} is already registered.` });
             }
         
-//-----------phone validation---------------
+//-----------password validation---------------
         if (password) {
             if (!validator.isValid(password)) {
                 return res.status(400).send({ status: false, message: "Invalid request parameter, please provide password" })
@@ -329,12 +329,12 @@ const updateProfile = async (req, res) => {
             password = await bcrypt.hash(password, salt);
         }
 
-        
+        //--------userId validation--------------------
         let updateAddress = await userModel.findOne({ _id: userId })
         if (!updateAddress) {
             return res.status(400).send({ status: false, message: "This userId does not exist" });;
         }
-        
+        //---------------address validation-------------
         if (address) {
             if (address.shipping) {
                 if (address.shipping.street) {
@@ -361,7 +361,7 @@ const updateProfile = async (req, res) => {
         }
         let updateProfile = await userModel.findOneAndUpdate({ _id: userId },
             { fname, lname, email, password, profileImage, address: updateAddress.address }, { new: true })
-        return res.status(200).send({ status: true, message: "user profile update successfull", data: updateProfile })
+        return res.status(200).send({ status: true, message: "user profile update successfully", data: updateProfile })
     } catch (err) {
         console.log(err)
         res.status(500).send({ status: false, msg: err.message })

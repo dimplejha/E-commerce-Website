@@ -39,7 +39,32 @@ let isValidateSize = function (value) {
     return ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(value) != -1
 }
 
+const validEnum = function (value) {
+    let enumValue = ["S", "XS", "M", "X", "L", "XXL", "XL"]
+    for (let a of value) {
+        if (enumValue.includes(a) == false) {
+            return false
+        }
+    }
+    return true;
+}
 
+const isValidPrice = function(value){
+    if(!(/^\d{0,8}(\.\d{1,2})?$/.test(value.trim()))){
+        return false
+    }
+    return true
+}
+const isValidInstallments=function(installments){
+    return /^[1-9]{1,15}$/.test(installments)
+}
+
+const isValidPinCode = function(value){
+    if(!(/^[1-9][0-9]{5}$/.test(value.trim()))){
+        return false
+    }
+    return true
+}
 
 
 
@@ -52,5 +77,9 @@ module.exports = {
     isvalidPhoneNumber,
     isRightpassword,
     isValidObjectId,
-    isValidateSize
+    isValidateSize,
+    validEnum,
+    isValidPrice,
+    isValidInstallments,
+    isValidPinCode
 }

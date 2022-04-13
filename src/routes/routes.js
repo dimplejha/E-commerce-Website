@@ -17,9 +17,11 @@ router.put('/user/:userId/profile',mv.userAuth,userController.updateProfile)
 
 //--------------------------------------------product api--------------------------------
 router.post('/products',productController.createProduct)
-
+router.get('/products',productController.gettingProduct)
 router.get('/products/:productId',productController.getproductsById)
-router.put('/products/:productId',productController.updateProduct)
+router.put('/products/:productId',productController.updatedProductById)
+router.delete('/products/:productId',productController.deleteproductById)
+
 
 
 
