@@ -104,7 +104,7 @@
 }
 ```
 
-## GET /user/:userId/profile (Authentication required and authorisation)
+## GET /user/:userId/profile (Authentication required and authorisation also)
 - Allow an user to fetch details of their profile.
 - Make sure that userId in url param and in token is same
 - __Response format__

@@ -17,7 +17,7 @@ const isRightFormatemail = function (email) {
 }
 
 const isvalidPhoneNumber = function(phone){
-    return /^[6-9]\d{9}$/.test(phone)
+    return /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/.test(phone)
 }
 
  //     At least one upper case English letter, (?=.*?[A-Z])
@@ -30,6 +30,15 @@ const isvalidPhoneNumber = function(phone){
         
  }
 
+ const isValidObjectId = function (ObjectId) {
+    return mongoose.Types.ObjectId.isValid(ObjectId)
+}
+
+
+let isValidateSize = function (value) {
+    return ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(value) != -1
+}
+
 
 
 
@@ -41,5 +50,7 @@ module.exports = {
     isValidRequestBody,
     isRightFormatemail,
     isvalidPhoneNumber,
-    isRightpassword
+    isRightpassword,
+    isValidObjectId,
+    isValidateSize
 }

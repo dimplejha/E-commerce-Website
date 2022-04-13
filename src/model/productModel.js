@@ -38,10 +38,10 @@ const productSchema = new mongoose.Schema({
         trim: true,
         enum: ["S", "XS", "M", "X", "L", "XXL", "XL"]
     },
-    installments: { type: String },
+    installments: { type: Number },
     deletedAt: { type: Date, default: null },
     isDeleted: { type: Boolean, default: false }
 
 }, { timestamps: true });
 
-module.exports = mongoose.model('Product_data', productSchema)
+module.exports = mongoose.model('Product', productSchema)

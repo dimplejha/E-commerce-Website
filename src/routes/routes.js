@@ -16,7 +16,12 @@ router.put('/user/:userId/profile',mv.userAuth,userController.updateProfile)
 
 
 //--------------------------------------------product api--------------------------------
-router.post('/products',productController.productCreation)
+router.post('/products',productController.createProduct)
+
+router.get('/products/:productId',productController.getproductsById)
+router.put('/products/:productId',productController.updateProduct)
+
+
 
 
 
