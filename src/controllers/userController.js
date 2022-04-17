@@ -63,10 +63,10 @@ const userCreate = async (req, res) => {
         if (size < 8 || size > 15) {
             return res.status(400).send({ status: false, message: "Please provide password with minimum 8 and maximum 14 characters" });;
         }
-        if (validator.isRightpassword(password)) {
-            res.status(400).send({ status: false, msg: "Please enter Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
-            return
-        }
+        // if (validator.isRightpassword(password)) {
+        //     res.status(400).send({ status: false, msg: "Please enter Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
+        //     return
+        // }
 
 
         //---password decrpting---
@@ -175,19 +175,26 @@ const loginUser = async function (req, res) {
             res.status(400).send({ status: false, msg: "Password is required" })
             return
         }
+        
+
 
         //-------------------------validation ends--------------------------------------------
-        let userDetails = await userModel.findOne({ email,  password })
-        if (!userDetails) {
-            return res.status(400).send({ status: false, msg: "please provide email and password" })
+        let user=await userModel.findOne({email:email})
+        if(!user){
+            return res.status(400).send({status:false,msg:"please provide email and password"})
         }
+        const encryptedPassword = await bcrypt.compare(body.password, user.password)
+
+            if (!encryptedPassword) {
+                return res.status(400).send({ status: false, msg: 'password is incorrect' })
+            }
         else {
             let token = jwt.sign({
-                userId: userDetails._id,
+                userId: user._id,
                 iat: new Date().getTime()/1000, 
                 }, "Secret-Key", { expiresIn: "60m" })
             res.header("x-api-key", token)
-            res.status(200).send({ status: true, msg: "user login successfull", userId:userDetails._id,data: token })
+            res.status(200).send({ status: true, msg: "user login successfull", data:{userId:user._id,token} })
 
         }
     } catch (error) {
