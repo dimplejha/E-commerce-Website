@@ -71,6 +71,11 @@ const isValidCurrencyFormat = function (currencyFormat) {
 }
 
 
+const isValidNumber = function (value) {
+    if (!isNaN(value)) return true
+}
+
+
 
 
 
@@ -86,5 +91,6 @@ module.exports = {
     isValidPrice,
     isValidInstallments,
     isValidPinCode,
-    isValidCurrencyFormat
+    isValidCurrencyFormat,
+    isValidNumber
 }

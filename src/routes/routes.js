@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/userController')
 const productController = require('../controllers/productController')
 const cartController = require('../controllers/cartController')
+const orderController = require("../controllers/orderController");
 const mv = require('../middleware/auth.js')
 
 
@@ -24,10 +25,16 @@ router.delete('/products/:productId',productController.deleteproductById)
 
 
 //-----------------------------------------------cart api---------------------------------
-router.post('/users/:userId/cart',cartController.addToCart)
-router.put('/users/:userId/cart',cartController.updateCart)
-router.get('/users/:userId/cart',cartController.emptyCart)
-router.delete('/users/:userId/cart',cartController.getcartById)
+router.post('/users/:userId/cart',mv.userAuth,cartController.createCart)
+router.put('/users/:userId/cart',mv.userAuth,cartController.updatedCart)
+router.get('/users/:userId/cart',mv.userAuth,cartController.getcartById)
+router.delete('/users/:userId/cart',mv.userAuth,cartController.emptyCart)
+
+
+//-------------------------------------------------order api------------------------------
+
+router.post('/users/:userId/orders',mv.userAuth,orderController.createOrder)
+router.put('/users/:userId/orders',mv.userAuth,orderController.updateOrder)
 
 
 
