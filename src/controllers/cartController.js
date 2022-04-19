@@ -17,8 +17,9 @@ const createCart = async function (req, res) {
     if (!validator.isValid(user_id)) {
       return res.status(400).send({ status: false, message: "Enter the userId" });
     }
+    
     if (!validator.isValidObjectId(user_id)) {
-      return res.status(400).send({ status: false, message: "Enter a valid userId" });
+      return res.status(400).send({ status: false, message: "Enter a valid userId in params" });
     }
 
     //---finding userId(params)in DB
@@ -29,7 +30,7 @@ const createCart = async function (req, res) {
 
     //---------authorisation---------
     if (user_id != idFromToken) {
-      return res.status(403).send({ status: false, message: "User not authorized" })
+      return res.status(401).send({ status: false, message: "User not authorized" })
     }
 
     const requestBody = req.body;
@@ -40,6 +41,12 @@ const createCart = async function (req, res) {
 
     const { userId, items } = requestBody;
     //console.log(items.productId)
+
+
+    // if (req.userId !== userId) {
+    //   return res.status(400).send({ status: false, msg: "userId in params  and req.body are not same" })
+    // }
+
 
     //--------validating items in req.body------------
     if (!validator.isValid(items[0].productId)) {
@@ -142,7 +149,7 @@ const updatedCart = async function (req, res) {
 
     //-----authorization--------------
     if (userId!= idFromToken) {
-      return res.status(403).send({ status: false, message: "User not authorized" })
+      return res.status(401).send({ status: false, message: "User not authorized" })
     }
 
     let data = req.body
@@ -228,9 +235,9 @@ const getcartById = async function (req, res) {
     let idFromToken = req.userId
 
 
-    if (req.userId !== userId) {
-      return res.status(401).send({ status: false, msg: "you are not authorized" })
-    }
+    // if (req.userId !== userId) {
+    //   return res.status(401).send({ status: false, msg: "you are not authorized" })
+    // }
     if (!validator.isValidObjectId(userId)) {
       return res.status(400).send({ status: false, msg: "invalid userid" })
     }
@@ -242,7 +249,7 @@ const getcartById = async function (req, res) {
 
     //---------------authorisation--------------
     if (userId!= idFromToken) {
-      return res.status(403).send({ status: false, message: "User not authorized" })
+      return res.status(401).send({ status: false, message: "User not authorized" })
     }
     
 
@@ -284,7 +291,7 @@ const emptyCart = async function (req, res) {
 
   //--------------authorisating--------
   if (userId!= idFromToken) {
-    return res.status(403).send({ status: false, message: "User not authorized" })
+    return res.status(401).send({ status: false, message: "User not authorized" })
   }
 
   //----------validatig cartId--------------

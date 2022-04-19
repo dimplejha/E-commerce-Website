@@ -192,7 +192,7 @@ const loginUser = async function (req, res) {
             let token = jwt.sign({
                 userId: user._id,
                 iat: new Date().getTime()/1000, 
-                }, "Secret-Key", { expiresIn: "60m" })
+                }, "secret", { expiresIn: "60m" })
             res.header("x-api-key", token)
             res.status(200).send({ status: true, msg: "user login successfull", data:{userId:user._id,token} })
 
@@ -210,13 +210,20 @@ const getUserById = async (req, res) => {
     try {
 
         const userId = req.params.userId
-        if (!validator.isValidObjectId) {
+        if (!validator.isValidObjectId(userId)) {
             return res.status(400).send({ status: false, msg: "userId is required in params" })
         }
 
+       
+        if(!validator.isValid(userId)){
+            return res.status(400).send({ status: false, msg: "userId is required in params" })
+
+        }
+
+
         //-------------authorization----------
         if (req.userId !== userId) {
-            return res.status(403).send({ status: false, msg: "you are not authorized ,userId is not right" })
+            return res.status(401).send({ status: false, msg: "you are not authorized ,userId is not right" })
         }
 
         //---------finding document-----------
@@ -254,7 +261,7 @@ const updateProfile = async (req, res) => {
 
         //---------authorisation-------
         if (req.userId != userId) {
-            return res.status(403).send({ status: false, msg: "you are not authorized" })
+            return res.status(401).send({ status: false, msg: "you are not authorized" })
         }
 
         //------------------validation start-----------------------------------------------------

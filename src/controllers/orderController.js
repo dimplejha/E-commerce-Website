@@ -8,81 +8,125 @@ const orderModel = require("../model/orderModel");
 
 
 //---------------------------------1st--------------------------------------------------------------------------------------------------------------------
+// const createOrder = async function (req, res) {
+//     try {
+//         const userId = req.params.userId;
+//         const idFromToken = req.userId
+
+//         //-----------------validation starts----------------
+//         if (!validator.isValid(userId)) {
+//             return res.status(400).send({ status: false, message: "Enter the userId" });
+//         }
+//         if (!validator.isValidObjectId(userId)) {
+//             return res.status(400).send({ status: false, message: "Enter a valid userId" });
+//         }
+
+//         const user = await userModel.findOne({ _id: userId });
+//         if (!user) {
+//             return res.status(404).send({ status: false, message: "User not found" });
+//         }
+
+//         //-----------authorisation------------
+
+//         if (userId != idFromToken) {
+//             return res.status(401).send({ status: false, message: "User not authorized" })
+//         }
+
+//         const requestBody = req.body;
+
+//         if (!validator.isValidRequestBody(requestBody)) {
+//             return res.status(400).send({ status: false, message: "Enter cart details" });
+//         }
+
+//         const { cartId } = requestBody;
+//         if (!validator.isValid(cartId)) {
+//             return res.status(400).send({ status: false, message: "Enter the cartId" });
+//         }
+
+//         if (!validator.isValidObjectId(cartId)) {
+//             return res.status(400).send({ status: false, message: "Enter a valid cartId" });
+//         }
+//         const cartAlreadyPresent = await cartModel.findOne({ _id: cartId });
+//         if (!cartAlreadyPresent) {
+//             return res.status(404).send({ status: false, message: "cart not found" });
+//         }
+
+//         if (cartAlreadyPresent.userId != userId) {
+//             return res.status(400).send({ status: false, message: "With this user cart is not created" });
+//         }
+
+//         if (cartAlreadyPresent.totalItems == 0) {
+//             return res.status(400).send({ status: "SUCCESS", message: "There is no product to order ,First add product" })
+//         }
+
+//         let totalPrice = cartAlreadyPresent.totalPrice;
+//         let totalItems = cartAlreadyPresent.items.length
+//         let totalQuantity = 0
+
+//         let itemsArr = cartAlreadyPresent.items
+//         for (i in itemsArr) {
+//             totalQuantity += itemsArr[i].quantity
+
+//         }
+
+//         let newOrder = {
+//             userId: userId,
+//             items: cartAlreadyPresent.items,
+//             totalPrice: totalPrice,
+//             totalItems: totalItems,
+//             totalQuantity: totalQuantity
+//         };
+
+//         orderData = await orderModel.create(newOrder);
+//         return res.status(200).send({ status: "SUCCESS", message: "Order placed successfully", data: orderData });
+
+//     }
+//     catch (error) {
+//         return res.status(500).send({ status: false, message: error.message })
+//     }
+// }
+
 const createOrder = async function (req, res) {
     try {
-        const userId = req.params.userId;
-        const idFromToken = req.userId
+        let requestBody = req.body;
+        const userId = req.params.userId
 
-        //-----------------validation starts----------------
-        if (!validator.isValid(userId)) {
-            return res.status(400).send({ status: false, message: "Enter the userId" });
+        let { items,totalItems, totalPrice,totalQuantity} = requestBody
+       
+        if(Object.keys(requestBody).length==0){
+            return res.status(400).send({status:false,msg:"bad req"})
         }
+    
         if (!validator.isValidObjectId(userId)) {
-            return res.status(400).send({ status: false, message: "Enter a valid userId" });
+            return res.status(400).send({ status: false, message:"userid is not valid" })
+        }
+        requestBody.userId=userId
+           
+        if (req.userId!==userId) {
+            return res.status(401).send({ status: false, msg: "you are not authorized" })
         }
 
-        const user = await userModel.findOne({ _id: userId });
-        if (!user) {
-            return res.status(404).send({ status: false, message: "User not found" });
+        if (items.length ==0) {
+            return res.status(400).send({ status: false, msg: "empty items" })
         }
-
-        //-----------authorisation------------
-
-        if (userId != idFromToken) {
-            return res.status(403).send({ status: false, message: "User not authorized" })
+        if (!validator.isValid(items)) {
+            return res.status(400).send({ status: false, message: "items is required" })
         }
-
-        const requestBody = req.body;
-
-        if (!validator.isValidRequestBody(requestBody)) {
-            return res.status(400).send({ status: false, message: "Enter cart details" });
+        if (!validator.isValid(totalPrice)) {
+            return res.status(400).send({ status: false, message: "totalPrice is required"})
         }
-
-        const { cartId } = requestBody;
-        if (!validator.isValid(cartId)) {
-            return res.status(400).send({ status: false, message: "Enter the cartId" });
+        if (!validator.isValid(totalItems)) {
+            return res.status(400).send({ status: false, message: "totalItems is required"})
         }
-
-        if (!validator.isValidObjectId(cartId)) {
-            return res.status(400).send({ status: false, message: "Enter a valid cartId" });
+        if(!validator.isValid(totalQuantity)){
+            return res.status(400).send({status:false,msg:"totalQunatity is required"})
         }
-        const cartAlreadyPresent = await cartModel.findOne({ _id: cartId });
-        if (!cartAlreadyPresent) {
-            return res.status(404).send({ status: false, message: "cart not found" });
-        }
+         
+        const createProduct = await orderModel.create(requestBody);
+        res.status(201).send({ status: true, msg: 'sucesfully created order', data: createProduct })
 
-        if (cartAlreadyPresent.userId != userId) {
-            return res.status(400).send({ status: false, message: "With this user cart is not created" });
-        }
-
-        if (cartAlreadyPresent.totalItems == 0) {
-            return res.status(400).send({ status: "SUCCESS", message: "There is no product to order ,First add product" })
-        }
-
-        let totalPrice = cartAlreadyPresent.totalPrice;
-        let totalItems = cartAlreadyPresent.items.length
-        let totalQuantity = 0
-
-        let itemsArr = cartAlreadyPresent.items
-        for (i in itemsArr) {
-            totalQuantity += itemsArr[i].quantity
-
-        }
-
-        let newOrder = {
-            userId: userId,
-            items: cartAlreadyPresent.items,
-            totalPrice: totalPrice,
-            totalItems: totalItems,
-            totalQuantity: totalQuantity
-        };
-
-        orderData = await orderModel.create(newOrder);
-        return res.status(200).send({ status: "SUCCESS", message: "Order placed successfully", data: orderData });
-
-    }
-    catch (error) {
-        return res.status(500).send({ status: false, message: error.message })
+    } catch (error) {
+        res.status(500).send({ status: false, Message: error.message })
     }
 }
 
@@ -107,7 +151,7 @@ const updateOrder = async function (req, res) {
     }
        
         if (req.userId!==userId) {
-            return res.status(400).send({ status: false, msg: "you are not authorized" })
+            return res.status(401).send({ status: false, msg: "you are not authorized" })
         }
 
       
