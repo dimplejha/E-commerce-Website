@@ -61,7 +61,7 @@ const userCreate = async (req, res) => {
         }
         let size = Object.keys(password.trim()).length
         if (size < 8 || size > 15) {
-            return res.status(400).send({ status: false, message: "Please provide password with minimum 8 and maximum 14 characters" });;
+            return res.status(400).send({ status: false, message: "Please provide password with minimum 8 and maximum 15 characters" });;
         }
         // if (validator.isRightpassword(password)) {
         //     res.status(400).send({ status: false, msg: "Please enter Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
@@ -216,7 +216,7 @@ const getUserById = async (req, res) => {
 
         //-------------authorization----------
         if (req.userId !== userId) {
-            return res.status(401).send({ status: false, msg: "you are not authorized ,userId is not right" })
+            return res.status(403).send({ status: false, msg: "you are not authorized ,userId is not right" })
         }
 
         //---------finding document-----------
@@ -254,7 +254,7 @@ const updateProfile = async (req, res) => {
 
         //---------authorisation-------
         if (req.userId != userId) {
-            return res.status(401).send({ status: false, msg: "you are not authorized" })
+            return res.status(403).send({ status: false, msg: "you are not authorized" })
         }
 
         //------------------validation start-----------------------------------------------------

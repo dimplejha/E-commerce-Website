@@ -25,10 +25,10 @@ const isvalidPhoneNumber = function(phone){
       // At least one digit, (?=.*?[0-9])
       // At least one special character, (?=.?[#?!@$%^&-])
       // Minimum eight in length .{8,} (with the anchors)
- const isRightpassword=function(password){
-     return /^(?=.[0-9])(?=.[A-Z])(?=.[a-z])(?=.[!@#$%^&])[a-zA-Z0-9!@#$%^&]{8,16}$/.test(password)
+//  const isRightpassword=function(password){
+//      return /^(?=.[0-9])(?=.[A-Z])(?=.[a-z])(?=.[!@#$%^&])[a-zA-Z0-9!@#$%^&]{8,16}$/.test(password)
         
- }
+//  }
 
  const isValidObjectId = function (ObjectId) {
     return mongoose.Types.ObjectId.isValid(ObjectId)
@@ -84,7 +84,7 @@ module.exports = {
     isValidRequestBody,
     isRightFormatemail,
     isvalidPhoneNumber,
-    isRightpassword,
+   // isRightpassword,
     isValidObjectId,
     isValidateSize,
     validEnum,

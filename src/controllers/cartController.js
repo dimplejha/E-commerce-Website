@@ -8,7 +8,7 @@ const cartModel = require('../model/cartModel')
 
 //-----------------------------------------------------------1st api---------------------------------------------------------
 
-let createCart = async function (req, res) {
+const createCart = async function (req, res) {
   try {
     const user_id = req.params.userId;
     const idFromToken = req.userId
@@ -27,6 +27,7 @@ let createCart = async function (req, res) {
       return res.status(404).send({ status: false, message: "User not found" });
     }
 
+    //---------authorisation---------
     if (user_id != idFromToken) {
       return res.status(403).send({ status: false, message: "User not authorized" })
     }
@@ -40,18 +41,7 @@ let createCart = async function (req, res) {
     const { userId, items } = requestBody;
     //console.log(items.productId)
 
-    if (!validator.isValid(userId)) {
-      return res.status(400).send({ status: false, message: "Enter the userId" });
-    }
-
-    if (!validator.isValidObjectId(userId)) {
-      return res.status(400).send({ status: false, message: "enter a valid userId" });
-    }
-
-    if (user_id !== userId) {
-      return res.status(400).send({ status: false, message: "user in params doesn't match with user in body" });
-    }
-
+    //--------validating items in req.body------------
     if (!validator.isValid(items[0].productId)) {
       return res.status(400).send({ status: false, message: "enter the productId" });
     }
@@ -63,6 +53,7 @@ let createCart = async function (req, res) {
     if (!validator.isValid(items[0].quantity) && items[0].quantity < 1) {
       return res.status(400).send({ status: false, message: "enter a qunatity more than 1 " });
     }
+    //-----------------------------------validation ends---------------------------------------
 
     const product = await productModel.findOne({ _id: items[0].productId });
 
@@ -234,6 +225,8 @@ const updatedCart = async function (req, res) {
 const getcartById = async function (req, res) {
   try {
     const userId = req.params.userId
+    let idFromToken = req.userId
+
 
     if (req.userId !== userId) {
       return res.status(401).send({ status: false, msg: "you are not authorized" })
@@ -246,6 +239,12 @@ const getcartById = async function (req, res) {
     if (!userexist) {
       return res.status(404).send({ status: false, msg: "user doesnot exist" })
     }
+
+    //---------------authorisation--------------
+    if (userId!= idFromToken) {
+      return res.status(403).send({ status: false, message: "User not authorized" })
+    }
+    
 
     const cart = await cartModel.findOne({ userId: userId })
     if (!userexist) {
@@ -268,7 +267,27 @@ const getcartById = async function (req, res) {
 const emptyCart = async function (req, res) {
   try {
     const userId = req.params.userId
-    
+    let idFromToken = req.userId
+
+    //---------------------validating userId---------------
+    if (!validator.isValidObjectId(userId)) {
+      return res.status(400).send({ status: false, message: "Invalid userId in params." })
+  }
+  const findUser = await userModel.findOne({ _id: userId })
+  if (!findUser) {
+      return res.status(400).send({
+          status: false,
+          message: `User doesn't exists by ${userId} `
+      })
+  }
+
+
+  //--------------authorisating--------
+  if (userId!= idFromToken) {
+    return res.status(403).send({ status: false, message: "User not authorized" })
+  }
+
+  //----------validatig cartId--------------
     const cartByUserId = await cartModel.findOne({ userId: userId });
 
     if (!cartByUserId) {
