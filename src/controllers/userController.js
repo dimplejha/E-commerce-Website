@@ -63,10 +63,7 @@ const userCreate = async (req, res) => {
         if (size < 8 || size > 15) {
             return res.status(400).send({ status: false, message: "Please provide password with minimum 8 and maximum 15 characters" });;
         }
-        // if (validator.isRightpassword(password)) {
-        //     res.status(400).send({ status: false, msg: "Please enter Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
-        //     return
-        // }
+        
 
 
         //---password decrpting---

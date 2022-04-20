@@ -38,7 +38,7 @@ const createProduct = async (req, res) => {
         if (!validator.isValid(price)) {
             return res.status(400).send({ status: false, message: "price is required" })
         }
-        if (!/^\d+(?:\.\d{1,2})?$/.test(price)) {
+        if (!validator.isValidPrice(price)) {
             return res.status(400).send({ status: false, message: "Enter valid price" })
         }
 
@@ -66,6 +66,7 @@ const createProduct = async (req, res) => {
         if (!validator.isValidateSize(availableSizes)) {
             return res.status(400).send({ status: false, message: "Availablesize atleast one of the size in S, XS, M, X, L, XXL, XL" })
         }
+        //data.availableSizes=JSON.parse(data.availableSizes)
 
         let productData = {
             title,
@@ -357,6 +358,7 @@ const deleteproductById = async function (req, res) {
         if (productwithId.isDeleted == true) {
             return res.status(400).send({ status: false, msg: "product already deleted" })
         }
+        
 
         const productdelete = await productModel.findByIdAndUpdate({ _id: productId }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })
         return res.status(200).send({ status: true, msg: "deleted sucessfully", data: productdelete })
