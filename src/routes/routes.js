@@ -9,7 +9,7 @@ const mv = require('../middleware/auth.js')
 
 
 //---------------------------------------------User api----------------------------------
-router.post('/register',userController.userCreate)
+router.post('/register',userController.createUser)
 router.post('/login',userController.loginUser)
 router.get('/user/:userId/profile',mv.userAuth,userController.getUserById)
 router.put('/user/:userId/profile',mv.userAuth,userController.updateProfile)
@@ -20,7 +20,7 @@ router.put('/user/:userId/profile',mv.userAuth,userController.updateProfile)
 router.post('/products',productController.createProduct)
 router.get('/products',productController.getProductsByfilter)
 router.get('/products/:productId',productController.getproductsById)
-router.put('/products/:productId',productController.updatedProductById)
+router.put('/products/:productId',productController.updatedProducts)
 router.delete('/products/:productId',productController.deleteproductById)
 
 
@@ -28,7 +28,7 @@ router.delete('/products/:productId',productController.deleteproductById)
 router.post('/users/:userId/cart',mv.userAuth,cartController.createCart)
 router.put('/users/:userId/cart',mv.userAuth,cartController.updatedCart)
 router.get('/users/:userId/cart',mv.userAuth,cartController.getcartById)
-router.delete('/users/:userId/cart',mv.userAuth,cartController.emptyCart)
+router.delete('/users/:userId/cart',mv.userAuth,cartController.deleteCart)
 
 
 //-------------------------------------------------order api------------------------------

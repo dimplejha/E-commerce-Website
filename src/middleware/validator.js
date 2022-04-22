@@ -12,6 +12,13 @@ const isValidRequestBody = function(requestBody) {
     return Object.keys(requestBody).length > 0; 
 };
 
+const char = function (value) {
+    return /^[A-Za-z\s]+$/.test(value)
+}
+
+const validateString = function (value) {
+    return /^\S*$/.test(value)
+}
 const isRightFormatemail = function (email) {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
 }
@@ -20,22 +27,13 @@ const isvalidPhoneNumber = function(phone){
     return /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/.test(phone)
 }
 
- //     At least one upper case English letter, (?=.*?[A-Z])
-      // At least one lower case English letter, (?=.*?[a-z])
-      // At least one digit, (?=.*?[0-9])
-      // At least one special character, (?=.?[#?!@$%^&-])
-      // Minimum eight in length .{8,} (with the anchors)
-//  const isRightpassword=function(password){
-//      return /^(?=.[0-9])(?=.[A-Z])(?=.[a-z])(?=.[!@#$%^&])[a-zA-Z0-9!@#$%^&]{8,16}$/.test(password)
-        
-//  }
 
  const isValidObjectId = function (ObjectId) {
     return mongoose.Types.ObjectId.isValid(ObjectId)
 }
 
 
-let isValidateSize = function (value) {
+const isValidateSize = function (value) {
     return ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(value) != -1
 }
 
@@ -82,9 +80,10 @@ const isValidNumber = function (value) {
 module.exports = {
     isValid,
     isValidRequestBody,
+    char,
+    validateString,
     isRightFormatemail,
     isvalidPhoneNumber,
-   // isRightpassword,
     isValidObjectId,
     isValidateSize,
     validEnum,
